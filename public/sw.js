@@ -1,4 +1,4 @@
-const CACHE='tradewise-shell-v1';
+const CACHE='trading-journal-shell-v2';
 self.addEventListener('install',event=>event.waitUntil((async()=>{const cache=await caches.open(CACHE),base=new URL('./',self.location.href),shell=['./','./index.html','./manifest.webmanifest','./icon.svg'].map(path=>new URL(path,base).href);await cache.addAll(shell);const response=await fetch(new URL('index.html',base)),html=await response.text(),assets=[...html.matchAll(/(?:src|href)="([^"]+\.(?:js|css)(?:\?[^"]*)?)"/g)].map(match=>new URL(match[1],base).href);await cache.addAll(assets);})()));
-self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('tradewise-')&&k!==CACHE).map(k=>caches.delete(k))))));
+self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>(k.startsWith('tradewise-')||k.startsWith('trading-journal-'))&&k!==CACHE).map(k=>caches.delete(k))))));
 self.addEventListener('fetch',event=>{const request=event.request;if(request.method!=='GET'||new URL(request.url).origin!==self.location.origin)return;event.respondWith(caches.match(request).then(cached=>cached||fetch(request).then(response=>{if(response.ok){const copy=response.clone();caches.open(CACHE).then(c=>c.put(request,copy));}return response;}).catch(()=>caches.match('./index.html'))));});

@@ -1,4 +1,4 @@
-name: Deploy TradeWise Journal
+name: Deploy Trading Journal
 on:
   push:
     branches: [main]
